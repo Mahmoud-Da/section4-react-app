@@ -1,0 +1,13 @@
+dockrize react app:
+1- install package manger (node) (sudo install npm)
+2- package install (npm install)
+3- packagestart (npm start)
+
+dockerize app
+1- add docker file to it (Docker file: contains instructions for building an image)
+- chosing the right image docs.docker.com/samples
+FROM node:latest #never use it and use a specific version to aviod app crash in future
+when donloading image the docker will download automatically a version that match the CPU architecture 
+alpine images are smaller for fast deploying
+
+

@@ -26,8 +26,43 @@ FROM node:14.16.0-alpine3.13
 # / # node --version
 # v14.16.0
 
+RUN addgroup app && adduser -S -G app app
+# to avoid seciruty holes is better not to use (root user)
+# creatting app user that belong to app group
+# -S create system user
+# -G set the group of the user
+
+
+
+USER app
+# all this command will be excute by app user
+# $ docker run -it react-app sh
+# /app $ whoami
+# app
+
+# when add user at first to have permison of installing npm 
+
 WORKDIR /app
 # using WORKDIR we can use relative path ex{before: COPY . /app/ after: COPY . .}
+
+COPY package*.json .
+# we spicified the library files to speed up our building image proces coz 
+# if we run npm install after COPY .. everytime a saml change in our folder 
+# the npm install will be run  again and it will reused from cache (for more detail read 1- image&conttainer.txt)
+
+RUN npm install
+# after we used .dockerignore we had one problem we lost node_module file
+# coz we ignored node_module
+# /app # ls
+# Dockerfile         package-lock.json  public             yarn.lock
+# README.md          package.json       src
+# here we use Run commnad
+
+# docker run -it react-app sh
+# /app # ls
+# Dockerfile         node_modules       package.json       src
+# README.md 
+
 
 COPY . .
 # to copy all in current dirctory
@@ -54,20 +89,6 @@ COPY . .
 # README.md          package-lock.json  public             yarn.lock  #{coz we set the current dirctory}
 
 
-RUN npm install
-# after we used .dockerignore we had one problem we lost node_module file
-# coz we ignored node_module
-# /app # ls
-# Dockerfile         package-lock.json  public             yarn.lock
-# README.md          package.json       src
-# here we use Run commnad
-
-# docker run -it react-app sh
-# /app # ls
-# Dockerfile         node_modules       package.json       src
-# README.md 
-
-
 ENV API_URL=http://api.myapp.com/
 # to set the enviroment varibles {we can wirte witout = API_URL http://api.myapp.com/
 # but to make readable it`s better to use it }
@@ -89,3 +110,29 @@ ENV API_URL=http://api.myapp.com/
 # /app # echo $API_URL
 # http://api.myapp.com/
 
+
+EXPOSE 3000
+# http://localhost:3000 when we run it manually 3000 port run on the host but when run it
+# with docker it runs on container
+# 3000 is the port of the container
+
+# Exec form : excute the command dirctly that why it always better to use Exec form, 
+# and make it faster when stop container (cleaning resource)
+CMD ["npm", "start"]
+
+# shell form: docker will excute this comand inside seprate shell programe
+# CMD npm start
+
+
+# so we don`t have to write command "docker run react-app npm start" to run container
+# we can run it now only by using "docker run react-app"
+# if we have multi CMD command only the last one will work {coz CMD for defualt command}
+
+# RUN VS CMD
+# RUN: ecxute command when building image
+# CMD: ecxute command when starting container
+
+
+# ENTRYPOINT [ "npm", "start" ]
+# same as CMD but hard to overwrite when run container coz we need to user --entrypiont keyword
+# docker run react-app --entrypoint echo hi

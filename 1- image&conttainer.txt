@@ -1,0 +1,92 @@
+image:
+include everything (configration and settings) that application needs to run
+=> (contains: a cut-down OS, Third-party libraries, Application files, Environment variables)
+
+Container:
+once we have image we can started from it
+- Provides on isolated environment 
+=> (what is happen in container will be invisible to another one)
+- can be stopped & restart
+- is just a process
+=> (its spacial process coz it has it owns files)
+
+image:
+include everything (configration and settings) that application needs to run
+=> (contains: a cut-down OS, Third-party libraries, Application files, Environment variables)
+
+Container:
+once we have image we can started from it
+- Provides on isolated environment 
+=> (what is happen in container will be invisible to another one)
+- can be stopped & restart
+- is just a process
+=> (its spacial process coz it has it owns files)
+
+
+image is essensially a collaction of layers so when docker want 
+to create a image for us it excute every command (FROM, COPY, and so..)
+first layer FROM node
+second layer COPY ..
+and so
+
+check layer in terminal using docker history app-name
+
+$docker history react-app
+IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
+65cfdf311422   16 minutes ago   CMD ["/bin/sh" "-c" "npm start"]                0B        buildkit.dockerfile.v0
+<missing>      16 minutes ago   EXPOSE map[3000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      16 minutes ago   ENV API_URL=http://api.myapp.com/               0B        buildkit.dockerfile.v0
+<missing>      16 minutes ago   RUN /bin/sh -c npm install # buildkit           346MB     buildkit.dockerfile.v0
+<missing>      16 minutes ago   COPY . . # buildkit                             2.06MB    buildkit.dockerfile.v0
+<missing>      19 minutes ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      19 minutes ago   USER app                                        0B        buildkit.dockerfile.v0
+<missing>      19 minutes ago   RUN /bin/sh -c addgroup app && adduser -S -G…   4.84kB    buildkit.dockerfile.v0
+<missing>      2 years ago      /bin/sh -c #(nop)  CMD ["node"]                 0B        
+<missing>      2 years ago      /bin/sh -c #(nop)  ENTRYPOINT ["docker-entry…   0B        
+<missing>      2 years ago      /bin/sh -c #(nop) COPY file:238737301d473041…   116B      
+<missing>      2 years ago      /bin/sh -c apk add --no-cache --virtual .bui…   7.91MB    
+<missing>      2 years ago      /bin/sh -c #(nop)  ENV YARN_VERSION=1.22.5      0B        
+<missing>      2 years ago      /bin/sh -c addgroup -g 1000 node     && addu…   102MB     
+<missing>      2 years ago      /bin/sh -c #(nop)  ENV NODE_VERSION=14.16.0     0B        
+<missing>      2 years ago      /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B        
+<missing>      2 years ago      /bin/sh -c #(nop) ADD file:3b16ffee2b26d8af5…   5.35MB  
+
+when ask docker to build the image second time
+he will check every layer and see if it changed it will build the layer again 
+if not changed it will reuse it from cache
+
+
+To optimized our build 
+put the stable instructions up and changing instructions down
+
+image is essensially a collaction of layers so when docker want 
+to create a image for us it excute every command (FROM, COPY, and so..)
+first layer FROM node
+second layer COPY ..
+and so
+
+check layer in terminal using docker history app-name
+
+$docker history react-app
+IMAGE          CREATED          CREATED BY                                      SIZE      COMMENT
+65cfdf311422   16 minutes ago   CMD ["/bin/sh" "-c" "npm start"]                0B        buildkit.dockerfile.v0
+<missing>      16 minutes ago   EXPOSE map[3000/tcp:{}]                         0B        buildkit.dockerfile.v0
+<missing>      16 minutes ago   ENV API_URL=http://api.myapp.com/               0B        buildkit.dockerfile.v0
+<missing>      16 minutes ago   RUN /bin/sh -c npm install # buildkit           346MB     buildkit.dockerfile.v0
+<missing>      16 minutes ago   COPY . . # buildkit                             2.06MB    buildkit.dockerfile.v0
+<missing>      19 minutes ago   WORKDIR /app                                    0B        buildkit.dockerfile.v0
+<missing>      19 minutes ago   USER app                                        0B        buildkit.dockerfile.v0
+<missing>      19 minutes ago   RUN /bin/sh -c addgroup app && adduser -S -G…   4.84kB    buildkit.dockerfile.v0
+<missing>      2 years ago      /bin/sh -c #(nop)  CMD ["node"]                 0B        
+<missing>      2 years ago      /bin/sh -c #(nop)  ENTRYPOINT ["docker-entry…   0B        
+<missing>      2 years ago      /bin/sh -c #(nop) COPY file:238737301d473041…   116B      
+<missing>      2 years ago      /bin/sh -c apk add --no-cache --virtual .bui…   7.91MB    
+<missing>      2 years ago      /bin/sh -c #(nop)  ENV YARN_VERSION=1.22.5      0B        
+<missing>      2 years ago      /bin/sh -c addgroup -g 1000 node     && addu…   102MB     
+<missing>      2 years ago      /bin/sh -c #(nop)  ENV NODE_VERSION=14.16.0     0B        
+<missing>      2 years ago      /bin/sh -c #(nop)  CMD ["/bin/sh"]              0B        
+<missing>      2 years ago      /bin/sh -c #(nop) ADD file:3b16ffee2b26d8af5…   5.35MB  
+
+when ask docker to build the image second time
+he will check every layer and see if it changed it will build the layer again 
+if not changed it will reuse it from cache
