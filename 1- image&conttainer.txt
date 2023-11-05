@@ -90,3 +90,79 @@ IMAGE          CREATED          CREATED BY                                      
 when ask docker to build the image second time
 he will check every layer and see if it changed it will build the layer again 
 if not changed it will reuse it from cache
+
+To optimized our build 
+put the stable instructions up and changing instructions down
+
+
+Tag is only a label and docker enginge use "latest" keyword as defualt
+ps: latest it doesn`t nessery refrens to latest version
+"latest" is good for development but we should avoid in production (hard to debgug)
+docker images
+REPOSITORY     TAG       IMAGE ID       CREATED        SIZE
+react-app      latest    65cfdf311422   8 hours ago    463MB
+
+we can tag an image when we building it 
+docker build -t react-app:1 
+
+to untag an image
+docker image remove react-app:1
+
+to rename a tag 
+docker build -t react-app:latest react-app:1 
+
+rename a specific image {b03 is first three letters from IMAGE ID}
+now we are set the latest tag to the new versoin
+docker build -t b06 react-app:1 
+
+when pushing our imgae to docker hub if didn`t specify the versoin docker hub will push the latest by defualt
+if craete new tag 
+docker build -t react-app:3
+and want to push it we should previous it tag with user name docker hub
+
+
+sharing and load the docker file with others locally
+docker image save --help #=> to see the save option in detail
+
+Usage:  docker image save [OPTIONS] IMAGE [IMAGE...]
+
+Save one or more images to a tar archive (streamed to STDOUT by default)
+
+Aliases:
+  docker image save, docker save
+
+Options:
+  -o, --output string   Write to a file, instead of STDOUT
+
+
+
+
+tar is like zip file in windows/mac but in linux
+docker image save -o react-app.tar react-app:3
+
+
+
+
+
+
+
+when loading the file
+
+$ docker image load --help 
+
+Usage:  docker image load [OPTIONS]
+
+Load an image from a tar archive or STDIN
+
+Aliases:
+  docker image load, docker load
+
+Options:
+  -i, --input string   Read from tar archive file, instead of STDIN
+  -q, --quiet          Suppress the load output
+
+
+
+
+
+docker image load -i react-app.tar
